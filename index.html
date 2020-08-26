@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Sorting Algorithms</title>
+
+    <style type="text/css">
+        body {
+            background: #202028;
+            color: #fff;
+            text-align: center;
+            font-family: sans-serif;
+            margin-top: 10px;
+            user-select: none;
+        }
+
+        h2 {
+            margin: 5px;
+        }
+
+        p {
+            margin: 5px;
+        }
+
+        #mycanvas {
+            float: none;
+            overflow: hidden;
+        }
+
+        button {
+            margin: 5px 5px 10px 5px;
+            height: 30px;
+            width: 200px;
+        }
+
+        .slidercontainer {
+            display: block;
+            width: 70%;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 70%;
+            height: 10px;
+            border-radius: 5px;
+            background: #fff;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 5px solid black;
+            background: white;
+            cursor: pointer;
+        }
+
+        #sizeSliderValue {
+            margin: 5px;
+        }
+    </style>
+
+</head>
+
+<body onload="initSort()">
+    <div class="row">
+        <h2>Sorting Algorithms</h2>
+    </div>
+    <div>
+        <canvas id="mycanvas" width="1200" height="600"></canvas>
+    </div>
+    <div>
+        <button id="fillButton">Fill Color: On</button>
+        <button id="resetButton">Reset</button>
+    </div>
+    <div class="sliderContainer">
+        <input type="range" min="10" max="200" value="100" class="slider" id="maxSizeSlider">
+        <p id="sizeSliderValue">Number of elements: 100</p>
+    </div>
+    <div>
+        <button id="insertionSortButton">Insertion Sort</button>
+    </div>
+
+    <script src="app/elementClass.js"></script>
+    <script src="app/initSort.js"></script>
+    <script src="app/sort.js"></script>
+</body>
+
+</html>
