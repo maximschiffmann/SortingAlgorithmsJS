@@ -13,6 +13,43 @@ var sort = (function () {
     var allowSort = true;
     var stop = false;
 
+    var steps = 0;
+    var milliSec = 0;
+    var seconds = 0;
+    var minutes = 0;
+    var count = false;
+    var timeTemp = Date.now();
+
+    function drawSteps() {
+        context.fillStyle = "rgba(0,0,0,0.7)";
+        context.fillRect(0, 0, 240, 110);
+        context.fillStyle = "white";
+        context.font = "30px Arial";
+        context.fillText("Steps: " + steps, 20, 40);
+        context.fillText("Time: " + minutes + ":" + seconds + ":" + milliSec, 20, 80);
+    }
+
+    function updateTime() {
+        if (count === true) {
+            var elapsedTime = Date.now();
+            milliSec = (elapsedTime - timeTemp) % 1000;
+            seconds = Math.floor((elapsedTime - timeTemp) / 1000) % 60;
+            minutes = Math.floor((elapsedTime - timeTemp) / 1000 / 60) % 60;
+
+            seconds = (seconds < 10) ? "0" + seconds : seconds;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+        }
+    }
+
+    function resetTime() {
+        steps = 0;
+        count = false;
+        milliSec = 0;
+        seconds = 0;
+        minutes = 0;
+        timeTemp = Date.now();
+    }
+
     function setupButtons() {
         var fillButton = document.getElementById("fillButton");
         fillButton.addEventListener("click", function () {
@@ -27,7 +64,18 @@ var sort = (function () {
         var insertionSortButton = document.getElementById("insertionSortButton");
         insertionSortButton.addEventListener("click", function () {
             if (allowSort === true) {
+                reset();
                 insertionSortStart();
+                count = true;
+            }
+            allowSort = false;
+        });
+        var bubbleSortButton = document.getElementById("bubbleSortButton");
+        bubbleSortButton.addEventListener("click", function () {
+            if (allowSort === true) {
+                reset();
+                bubbleSortStart();
+                count = true;
             }
             allowSort = false;
         });
@@ -55,8 +103,8 @@ var sort = (function () {
         setupSlider();
         context = canvas.getContext('2d');
         setupElements();
-       window.requestAnimationFrame(draw);
-      //  draw();
+        window.requestAnimationFrame(draw);
+        //  draw();
     }
 
     function setupElements() {
@@ -73,6 +121,8 @@ var sort = (function () {
     function draw() {
         drawBackground();
         drawElements();
+        drawSteps();
+        updateTime();
         drawFrame();
         window.requestAnimationFrame(draw);
     }
@@ -104,6 +154,7 @@ var sort = (function () {
                 elements[j].xPos = elements[j - 1].xPos;
                 elements[j - 1].xPos = temp;
                 j = j - 1;
+                steps++;
                 await new Promise(resolve =>
                     setTimeout(() => {
                         resolve();
@@ -111,6 +162,32 @@ var sort = (function () {
                 );
             }
         }
+        count = false;
+        allowSort = true;
+    }
+    async function bubbleSortStart() {
+        console.log("Start sort");
+        stop = false;
+        var i = 0;
+        var j = 0;
+        for (i = 0; i < elements.length - 1; i++) {
+            for (j = 0; j < elements.length - i - 1; j++) {
+                if (stop === true) i = elements.length - 1;
+                if (elements[j].elementHigh < elements[j + 1].elementHigh) {
+                    elements[j + 1] = swap(elements[j], elements[j] = elements[j + 1]);
+                    var temp = elements[j].xPos;
+                    elements[j].xPos = elements[j + 1].xPos;
+                    elements[j + 1].xPos = temp;
+                }
+                steps++;
+                await new Promise(resolve =>
+                    setTimeout(() => {
+                        resolve();
+                    }, -1)
+                );
+            }
+        }
+        count = false;
         allowSort = true;
     }
 
@@ -119,6 +196,7 @@ var sort = (function () {
         setupElements();
         allowSort = true;
         draw();
+        resetTime();
     }
 
     function drawBackground() {
